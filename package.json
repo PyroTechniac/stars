@@ -1,0 +1,48 @@
+{
+    "name": "@starslight/stars",
+    "version": "0.1.0",
+    "author": "Gryffon Bellish <owenbellish@gmail.com>",
+    "scripts": {
+        "prebuild": "npm run lint:fix",
+        "lint:fix": "npx eslint src --ext .ts --fix",
+        "lint": "npx eslint src --ext .ts",
+        "build": "tsc"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@types/node": "^11.13.8",
+        "@typescript-eslint/eslint-plugin": "^1.7.0",
+        "@typescript-eslint/parser": "^1.7.0",
+        "eslint": "^5.16.0",
+        "eslint-config-marine": "^2.2.0",
+        "typescript": "^3.4.5"
+    },
+    "eslintConfig": {
+        "extends": "marine/node",
+        "rules": {
+            "@typescript-eslint/indent": [
+                "error",
+                4,
+                "spaces"
+            ],
+            "quotes": [
+                "error",
+                "single"
+            ],
+            "multiline-ternary": "off",
+            "radix": "off",
+            "@typescript-eslint/promise-function-async": "off",
+            "promise/prefer-await-to-callbacks": "off",
+            "@typescript-eslint/no-extraneous-class": "off",
+            "@typescript-eslint/no-object-literal-type-assertion": "off",
+            "@typescript-eslint/no-parameter-properties": "off",
+            "no-useless-constructor": "off",
+            "indent": "off",
+            "no-dupe-class-members": "off",
+            "@typescript-eslint/no-empty-interface": "off"
+        }
+    },
+    "eslintIgnore": [
+        "lib/**"
+    ]
+}
