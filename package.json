@@ -8,8 +8,12 @@
         "lint": "npx eslint src --ext .ts",
         "build": "tsc"
     },
-    "dependencies": {},
+    "dependencies": {
+        "axios": "^0.18.0",
+        "form-data": "^2.3.3"
+    },
     "devDependencies": {
+        "@types/form-data": "^2.2.1",
         "@types/node": "^11.13.8",
         "@typescript-eslint/eslint-plugin": "^1.7.0",
         "@typescript-eslint/parser": "^1.7.0",
@@ -42,7 +46,14 @@
             "no-useless-constructor": "off",
             "indent": "off",
             "no-dupe-class-members": "off",
-            "@typescript-eslint/no-empty-interface": "off"
+            "@typescript-eslint/no-empty-interface": "off",
+            "@typescript-eslint/no-unused-vars": "off",
+            "no-shadow": "off",
+            "no-eq-null": "off",
+            "promise/param-names": "off",
+            "no-cond-assign": "off",
+            "no-var": "off",
+            "block-scoped-var": "off"
         }
     },
     "eslintIgnore": [
