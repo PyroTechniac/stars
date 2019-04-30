@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "outDir": "./lib",
+        "target": "esnext",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "types": [
+            "node"
+        ],
+        "noEmitOnError": true,
+        "declaration": true
+    },
+    "exclude": [
+        "node_modules",
+        "lib"
+    ],
+    "include": [
+        "src"
+    ]
+}
