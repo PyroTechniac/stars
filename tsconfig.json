@@ -6,7 +6,11 @@
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "types": [
-            "node"
+            "node",
+            "node-fetch",
+            "ws",
+            "pako",
+            "form-data"
         ],
         "noEmitOnError": true,
         "declaration": true

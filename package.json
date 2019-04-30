@@ -10,11 +10,21 @@
     },
     "dependencies": {
         "axios": "^0.18.0",
-        "form-data": "^2.3.3"
+        "form-data": "^2.3.3",
+        "isomorphic-ws": "^4.0.1",
+        "node-fetch": "^2.4.1",
+        "p-throttle": "^3.1.0",
+        "pako": "^1.0.10",
+        "tsubaki": "^1.3.1",
+        "ws": "^7.0.0",
+        "yargs": "^13.2.2"
     },
     "devDependencies": {
         "@types/form-data": "^2.2.1",
         "@types/node": "^11.13.8",
+        "@types/node-fetch": "^2.1.4",
+        "@types/pako": "^1.0.0",
+        "@types/ws": "^4.0.2",
         "@typescript-eslint/eslint-plugin": "^1.7.0",
         "@typescript-eslint/parser": "^1.7.0",
         "eslint": "^5.16.0",
@@ -22,7 +32,10 @@
         "typescript": "^3.4.5"
     },
     "optionalDependencies": {
-        "erlpack": "github:discordapp/erlpack"
+        "bufferutil": "^3.0.2",
+        "erlpack": "github:discordapp/erlpack",
+        "utf-8-validate": "^4.0.0",
+        "zlib-sync": "^0.1.4"
     },
     "eslintConfig": {
         "extends": "marine/node",
