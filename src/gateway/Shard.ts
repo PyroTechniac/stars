@@ -154,6 +154,63 @@ export class Shard extends EventEmitter {
 
     public receive = ({ data }: MessageEvent): void => {
         let conv: Uint8Array | string;
+        if (Array.isArray(data)) conv = new Uint8Array(Buffer.concat(data));
+        else if (Buffer.isBuffer(data) || data instanceof ArrayBuffer) conv = new Uint8Array(data);
+        else conv = data;
+        const suffix = conv.slice(conv.length - 4, conv.length);
+        let flush = true;
+        for (let i = 0; i < suffix.length; i++) {
+            if (suffix[i] !== Shard.ZLIB_SUFFIX[i]) {
+                flush = false;
+                break
+            }
+        }
+
+        this.inflate.push(conv, flush ? zlib.Z_SYNC_FLUSH : zlib.Z_NO_FLUSH);
+        if (!flush) return;
+
+        let result: string | number[] | Uint8Array = this.inflate.result;
+        if (Array.isArray(result)) result = new Uint8Array(result);
+
+        const decoded: Payload = decode(result);
+        this.emit('receive', decoded);
+        this.handlePayload(decoded);
+    }
+
+    private handlePayload(payload: Payload) {
+        switch (payload.op) {
+            case OP.DISPATCH:
+                if (payload.s && payload.s > this.seq) this.seq = payload.s;
+                if (payload.t === Dispatch.READY) this.session = payload.d.session_id;
+                if (payload.t) this.emit(payload.t, payload.d);
+                break
+            case OP.HEARTBEAT:
+                this.heartbeat();
+                break;
+            case OP.RECONNECT:
+                this.reconnect();
+                break;
+            case OP.INVALID_SESSION:
+                if (!payload.d) this.session = null;
+                wait(Math.random() * 5 + 1).then(() => this.identify());
+                break;
+            case OP.HELLO:
+                this._clearHeartbeater();
+                this._heartbeater = setInterval(() => {
+                    if (this._acked) {
+                        this.heartbeat();
+                        this._acked = false;
+                    } else {
+                        this.reconnect(4000);
+                    }
+                }, payload.d.heartbeat_interval);
+
+                this.identify();
+                break;
+            case OP.HEARTBEAT_ACK:
+                this._acked = true;
+                break;
+        }
     }
 
     private _registerWSListeners() {
