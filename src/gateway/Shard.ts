@@ -213,10 +213,57 @@ export class Shard extends EventEmitter {
         }
     }
 
+    private handleClose = (event: CloseEvent): void => {
+        this.emit('close');
+        this._reset();
+
+        switch (event.code) {
+            case 4004:
+            case 4010:
+            case 4011:
+                this.emit('exit', event);
+                return;
+        }
+
+        this.reconnect();
+    }
+
+    private handleError = (err: Event): void => {
+        this.emit('error', err);
+        this.backoff *= 2;
+        this.reconnect();
+    }
+
+    private handleOpen = (event: Event): void => {
+        this.backoff = 1e3;
+        this.emit('open', event);
+    }
+
     private _registerWSListeners() {
         this.ws.onmessage = this.receive;
         this.ws.onerror = this.handleError;
         this.ws.onclose = this.handleClose;
         this.ws.onopen = this.handleOpen;
+    }
+
+    private _clearWSListeners() {
+        this.ws.onmessage = null;
+        this.ws.onclose = null;
+        this.ws.onerror = null;
+        this.ws.onopen = null;
+    }
+
+    private _clearHeartbeater() {
+        if (this._heartbeater) {
+            clearInterval(this._heartbeater);
+            this._heartbeater = undefined;
+        }
+    }
+
+    private _reset() {
+        this._clearHeartbeater();
+        this._clearWSListeners();
+        this.inflate = new zlib.Inflate();
+        this.seq = 0;
     }
 }
