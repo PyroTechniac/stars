@@ -2,7 +2,7 @@ import pako = require('pako');
 import throttle from 'p-throttle';
 import { Errors, encoding, encode, decode } from '../util';
 import { Dispatch, OP, Presence } from '../types';
-
+/* eslint-disable no-undef */
 import { Gateway } from './Gateway';
 import { ws as WebSocket } from './util/WebSocket';
 import { zlib } from './util/zlib';
@@ -20,29 +20,29 @@ const { Codes, StarsError } = Errors;
 
 const isBlob = (v: unknown): v is Blob => {
     if (typeof v === 'undefined') return false;
-    return v instanceof Blob
-}
+    return v instanceof Blob;
+};
 
 export const wait = (time: number) => new Promise<void>(r => setTimeout(r, time));
 
-export type Identify = {
-    token: string,
+export interface Identify {
+    token: string;
     properties: {
-        $os: string,
-        browser: string,
-        device: string,
-    },
-    compress: string,
-    large_threshold: number,
-    shard: [number, number],
-    presence: Partial<Presence>,
+        $os: string;
+        browser: string;
+        device: string;
+    };
+    compress: string;
+    large_threshold: number;
+    shard: [number, number];
+    presence: Partial<Presence>;
 }
 
-export type Payload = {
-    t?: string,
-    s?: number,
-    op: number,
-    d: any
+export interface Payload {
+    t?: string;
+    s?: number;
+    op: number;
+    d: any;
 }
 
 export class Shard extends EventEmitter {
@@ -75,17 +75,17 @@ export class Shard extends EventEmitter {
         this.identify = this.gateway.identify.bind(this.gateway, this);
         this.send = throttle(this.send.bind(this), 120, 60) as any;
 
-        this.connect().catch(e => this.emit('error', e))
+        this.connect().catch(e => this.emit('error', e));
     }
 
     public async connect(): Promise<void> {
         if (this.ws) {
             switch (this.ws.readyState) {
-                case WebSocket.CONNECTING:
-                case WebSocket.CLOSING:
-                    return;
-                case WebSocket.OPEN:
-                    this.disconnect();
+            case WebSocket.CONNECTING:
+            case WebSocket.CLOSING:
+                return;
+            case WebSocket.OPEN:
+                this.disconnect();
             }
         }
 
@@ -108,16 +108,16 @@ export class Shard extends EventEmitter {
 
         let data: Payload;
         switch (typeof op) {
-            case 'object':
-                data = op;
-                break;
-            case 'string':
-                op = OP[op]; // intentional fallthrough
-            case 'number':
-                data = { op, d };
-                break;
-            default:
-                throw new Error(`Invalid op type "${typeof op}"`);
+        case 'object':
+            data = op;
+            break;
+        case 'string':
+            op = OP[op]; // intentional fallthrough
+        case 'number':
+            data = { op, d };
+            break;
+        default:
+            throw new Error(`Invalid op type "${typeof op}"`);
         }
 
         this.emit('send', data);
@@ -127,7 +127,7 @@ export class Shard extends EventEmitter {
     public disconnect(code?: number, reason?: string): void {
         if ([WebSocket.CLOSED, WebSocket.CLOSING].includes(this.ws.readyState)) return;
         this.emit('disconnect');
-        this._reset()
+        this._reset();
 
         this.ws.close(code, reason);
     }
@@ -145,7 +145,7 @@ export class Shard extends EventEmitter {
             token: this.gateway.token,
             seq: this.seq,
             session_id: this.session
-        })
+        });
     }
 
     public heartbeat(): void {
@@ -162,7 +162,7 @@ export class Shard extends EventEmitter {
         for (let i = 0; i < suffix.length; i++) {
             if (suffix[i] !== Shard.ZLIB_SUFFIX[i]) {
                 flush = false;
-                break
+                break;
             }
         }
 
@@ -179,37 +179,37 @@ export class Shard extends EventEmitter {
 
     private handlePayload(payload: Payload) {
         switch (payload.op) {
-            case OP.DISPATCH:
-                if (payload.s && payload.s > this.seq) this.seq = payload.s;
-                if (payload.t === Dispatch.READY) this.session = payload.d.session_id;
-                if (payload.t) this.emit(payload.t, payload.d);
-                break
-            case OP.HEARTBEAT:
-                this.heartbeat();
-                break;
-            case OP.RECONNECT:
-                this.reconnect();
-                break;
-            case OP.INVALID_SESSION:
-                if (!payload.d) this.session = null;
-                wait(Math.random() * 5 + 1).then(() => this.identify());
-                break;
-            case OP.HELLO:
-                this._clearHeartbeater();
-                this._heartbeater = setInterval(() => {
-                    if (this._acked) {
-                        this.heartbeat();
-                        this._acked = false;
-                    } else {
-                        this.reconnect(4000);
-                    }
-                }, payload.d.heartbeat_interval);
+        case OP.DISPATCH:
+            if (payload.s && payload.s > this.seq) this.seq = payload.s;
+            if (payload.t === Dispatch.READY) this.session = payload.d.session_id;
+            if (payload.t) this.emit(payload.t, payload.d);
+            break;
+        case OP.HEARTBEAT:
+            this.heartbeat();
+            break;
+        case OP.RECONNECT:
+            this.reconnect();
+            break;
+        case OP.INVALID_SESSION:
+            if (!payload.d) this.session = null;
+            wait(Math.random() * 5 + 1).then(() => this.identify());
+            break;
+        case OP.HELLO:
+            this._clearHeartbeater();
+            this._heartbeater = setInterval(() => {
+                if (this._acked) {
+                    this.heartbeat();
+                    this._acked = false;
+                } else {
+                    this.reconnect(4000);
+                }
+            }, payload.d.heartbeat_interval);
 
-                this.identify();
-                break;
-            case OP.HEARTBEAT_ACK:
-                this._acked = true;
-                break;
+            this.identify();
+            break;
+        case OP.HEARTBEAT_ACK:
+            this._acked = true;
+            break;
         }
     }
 
@@ -218,11 +218,11 @@ export class Shard extends EventEmitter {
         this._reset();
 
         switch (event.code) {
-            case 4004:
-            case 4010:
-            case 4011:
-                this.emit('exit', event);
-                return;
+        case 4004:
+        case 4010:
+        case 4011:
+            this.emit('exit', event);
+            return;
         }
 
         this.reconnect();

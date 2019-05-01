@@ -14,7 +14,7 @@ export interface GatewayData {
         total: number;
         remaining: number;
         reset_after: number;
-    }
+    };
 }
 
 export class Gateway {
@@ -23,7 +23,7 @@ export class Gateway {
     public static fetch(gatewayOrToken: string | Gateway, shardCount?: number): Gateway {
         if (typeof gatewayOrToken === 'string') {
             const existing = this.tokens.get(gatewayOrToken);
-            if (existing) return existing
+            if (existing) return existing;
             return new this(gatewayOrToken, shardCount);
         }
 
@@ -41,7 +41,7 @@ export class Gateway {
             writable: true,
             configurable: true,
             value: token
-        })
+        });
     }
 
     public get shards(): number {
@@ -58,7 +58,7 @@ export class Gateway {
         return this._data.url;
     }
 
-    public get sessionStartLimit(): null | { total: number, remaining: number, resetAfter: Date } {
+    public get sessionStartLimit(): null | { total: number; remaining: number; resetAfter: Date } {
         return this._data ? {
             total: this._data.session_start_limit.total,
             remaining: this._data.session_start_limit.remaining,
@@ -70,21 +70,21 @@ export class Gateway {
         if (shard.session) return shard.resume();
 
         if (this.sessionStartLimit && this.sessionStartLimit.remaining === 0) {
-            await wait(this.sessionStartLimit.resetAfter.getTime() - Date.now())
+            await wait(this.sessionStartLimit.resetAfter.getTime() - Date.now());
         }
 
         return shard.send(OP.IDENTIFY, Object.assign({
             token: this.token,
             properties: {
-              $os: platform(),
-              $browser: 'spectacles',
-              $device: 'spectacles',
+                $os: platform(),
+                $browser: 'spectacles',
+                $device: 'spectacles'
             },
             compress: false,
             large_threshold: 250,
             shard: [shard.id, this.shards],
-            presence: {},
-          }, packet));
+            presence: {}
+        }, packet));
     }
 
     public async fetch(force = false): Promise<this> {
@@ -92,11 +92,11 @@ export class Gateway {
 
         const res = await fetch('https://discordapp.com/api/v6/gateway/bot', {
             headers: {
-                Authorization: `Bot ${this.token}`,
-                Accept: 'application/json',
-                'User-Agent': `DiscordBot (${repository.url}, ${version})`,
+                'Authorization': `Bot ${this.token}`,
+                'Accept': 'application/json',
+                'User-Agent': `DiscordBot (${repository.url}, ${version})`
             }
-        })
+        });
 
         if (!res.ok) throw new HTTPError(res.status, res.statusText);
 
