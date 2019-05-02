@@ -90,7 +90,7 @@ export class Gateway {
     public async fetch(force = false): Promise<this> {
         if (!force && this._data) return Promise.resolve(this);
 
-        const res = await fetch('https://discordapp.com/api/v6/gateway/bot', {
+        const res = await fetch('https://discordapp.com/api/v7/gateway/bot', {
             headers: {
                 'Authorization': `Bot ${this.token}`,
                 'Accept': 'application/json',
