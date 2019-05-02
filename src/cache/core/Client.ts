@@ -7,6 +7,8 @@ import { ChannelAction } from '../actions/Channel';
 import { VoiceStateAction } from '../actions/VoiceState';
 import { GuildMemberAction } from '../actions/GuildMember';
 
+const accessorKeys: string[] = ['get', 'set', 'upsert', 'delete', 'size', 'keys']
+
 export type ChainableQuery = Storage & QueryObject;
 export interface QueryObject {
     [key: string]: ChainableQuery;
