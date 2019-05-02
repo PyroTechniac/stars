@@ -6,7 +6,7 @@ export class ChannelAction extends Action<Channel> {
     public reference(): Storage {
         return this.query.channels;
     }
-    
+
     public format(channel: Channel) {
         const copy: any = Object.assign({}, channel);
 
