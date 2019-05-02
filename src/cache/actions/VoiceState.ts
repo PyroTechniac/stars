@@ -32,7 +32,7 @@ export class VoiceStateAction extends Action<VoiceState> {
             state.guild_id = channel.guild_id;
         }
 
-        await super.delete(Object.assign(state, { id: state.user_id }))
+        await super.delete(Object.assign(state, { id: state.user_id }));
         return state;
     }
 }
