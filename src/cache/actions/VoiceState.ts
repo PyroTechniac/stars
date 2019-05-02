@@ -23,4 +23,16 @@ export class VoiceStateAction extends Action<VoiceState> {
         await super.upsert(Object.assign(state, { id: state.user_id }), pipeline);
         return state;
     }
+
+    public async delete(state: VoiceState): Promise<VoiceState> {
+        if (!state.guild_id) {
+            const channel = await this.query.channels.get(state.channel_id, { depth: 1 });
+            if (!channel.guild_id) return state;
+
+            state.guild_id = channel.guild_id;
+        }
+
+        await super.delete(Object.assign(state, { id: state.user_id }))
+        return state;
+    }
 }

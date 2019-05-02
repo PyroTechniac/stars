@@ -1,5 +1,5 @@
 import Storage from 'rejects';
-import { Client, QueryObject } from '../core/Client';
+import { Client, QueryObject, ClientActions } from '../core/Client';
 import * as Redis from 'ioredis';
 
 export abstract class Action<T> {
@@ -16,6 +16,10 @@ export abstract class Action<T> {
 
     public get query(): QueryObject {
         return this.client.query;
+    }
+
+    public get actions(): ClientActions {
+        return this.client.actions;
     }
 
     public async set(item: T & { id: string }): Promise<any> {
