@@ -1,8 +1,8 @@
-import {encode} from '../util';
+import { encode } from '../util';
 import * as amqp from 'amqplib';
-import {ulid} from 'ulid';
+import { ulid } from 'ulid';
 const {isFatalError} = require('amqplib/lib/connection'); // eslint-disable-line
-import {Broker} from './Base';
+import { Broker } from './Base';
 
 export interface AmqpOptions {
     reconnectTimeout?: number;
@@ -44,7 +44,7 @@ export class Amqp<Send = any, Receive = any> extends Broker<Send, Receive> {
                 connection = await amqp.connect(`amqp://${urlOrConn}`, options);
             } catch (e) {
                 this.emit('close', e);
-                await new Promise(r => setTimeout(r, this.options.reconnectTimeout))
+                await new Promise(r => setTimeout(r, this.options.reconnectTimeout));
                 continue;
             }
         }
