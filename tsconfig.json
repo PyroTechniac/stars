@@ -5,13 +5,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "types": [
-            "node",
-            "node-fetch",
-            "ws",
-            "pako",
-            "form-data"
-        ],
+        "types": [],
         "noEmitOnError": true,
         "declaration": true
     },
