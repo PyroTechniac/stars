@@ -19,18 +19,18 @@ export class ClientUtil {
         const discrim = member.user.discriminator;
 
         if (!wholeWord) {
-            return displayName.includes(text) || username.includes(text) || ((username.includes(text.split('#')[0]) || displayName.includes(text.split('#')[0])) && discrim.includes(text.split('#')[1]))
+            return displayName.includes(text) || username.includes(text) || ((username.includes(text.split('#')[0]) || displayName.includes(text.split('#')[0])) && discrim.includes(text.split('#')[1]));
         }
 
         return displayName === text || username === text || ((username === text.split('#')[0] || displayName === text.split('#')[0]) && discrim === text.split('#')[1]);
     }
 
     public resolveChannel(text: string, channels: Discord.Collection<Discord.Snowflake, Discord.GuildChannel>, caseSensitive = false, wholeWord = false): Discord.GuildChannel {
-        return channels.get(text) || channels.find(channel => this.checkChannel(text, channel, caseSensitive, wholeWord))
+        return channels.get(text) || channels.find(channel => this.checkChannel(text, channel, caseSensitive, wholeWord));
     }
 
     public resolveChannels(text: string, channels: Discord.Collection<Discord.Snowflake, Discord.GuildChannel>, caseSensitive = false, wholeWord = false): Discord.Collection<Discord.Snowflake, Discord.GuildChannel> {
-        return channels.filter(channel => this.checkChannel(text, channel, caseSensitive, wholeWord))
+        return channels.filter(channel => this.checkChannel(text, channel, caseSensitive, wholeWord));
     }
 
     public checkChannel(text: string, channel: Discord.GuildChannel, caseSensitive = false, wholeWord = false): boolean {
