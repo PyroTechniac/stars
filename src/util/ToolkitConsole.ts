@@ -1,52 +1,76 @@
-import { Console } from 'console'
-import { inspect } from 'util'
-import { Colors } from './Colors'
-import * as constants from './Constants'
-import { Util } from './Util'
-import { ConsoleOptions, AnyObj } from '../types'
-import { WriteStream } from 'tty'
-const { mergeDefault } = Util
+import { Console } from 'console';
+import { inspect } from 'util';
+import { Colors } from './Colors';
+import * as constants from './Constants';
+import { Util } from './Util';
+import { ConsoleOptions, AnyObj } from '../types';
+import { WriteStream } from 'tty';
+const { mergeDefault } = Util;
 
 export class ToolkitConsole extends Console {
-	public readonly stdout: NodeJS.WritableStream & WriteStream;
-	public readonly stderr: NodeJS.WritableStream & WriteStream;
-	public colors: AnyObj
-	public utc: boolean;
-	public constructor(options: ConsoleOptions = {}) {
-		options = mergeDefault(constants.DEFAULTS.CONSOLE, options);
-		super(options.stdout, options.stderr);
+    public readonly stdout: NodeJS.WritableStream & WriteStream;
+    public readonly stderr: NodeJS.WritableStream & WriteStream;
+    public colors: AnyObj
+    public utc: boolean;
+    public constructor(options: ConsoleOptions = {}) {
+        options = mergeDefault(constants.DEFAULTS.CONSOLE, options);
+        super(options.stdout, options.stderr);
 
-		Object.defineProperty(this, 'stdout', { value: options.stdout })
+        Object.defineProperty(this, 'stdout', { value: options.stdout });
 
-		Object.defineProperty(this, 'stderr', { value: options.stderr })
+        Object.defineProperty(this, 'stderr', { value: options.stderr });
 
-		Colors.useColors = typeof options.useColor === 'undefined' ? this.stdout.isTTY || false : options.useColor;
+        Colors.useColors = typeof options.useColor === 'undefined' ? this.stdout.isTTY || false : options.useColor;
 
-		this.colors = {};
+        this.colors = {};
 
-		for (const [name, formats] of Object.entries(options.colors)) {
-			this.colors[name] = {}
-			for (const [type, format] of Object.entries(formats)) this.colors[name][type] = new Colors(format);
-		}
+        for (const [name, formats] of Object.entries(options.colors)) {
+            this.colors[name] = {};
+            for (const [type, format] of Object.entries(formats)) this.colors[name][type] = new Colors(format);
+        }
 
-		this.utc = options.utc;
-	}
+        this.utc = options.utc;
+    }
 
-	private write(data: any[], type: string = 'log'): void {
-		type = type.toLowerCase();
-		const newData = data.map(ToolkitConsole._flatten).join('\n');
-		const {time, message} = this.colors[type];
-		super[constants.DEFAULTS.CONSOLE.types[type] || 'log']
-	}
+    private write(data: any[], type: string = 'log'): void {
+        type = type.toLowerCase();
+        const newData = data.map(ToolkitConsole._flatten).join('\n');
+        const { time, message } = this.colors[type];
+        super[constants.DEFAULTS.CONSOLE.types[type] || 'log'](newData.split('\n').map(str => `${message.format(str)}`).join('\n'));
+    }
 
-	private static _flatten(data: any): string {
-		if (typeof data === 'undefined' || typeof data === 'number' || data === null) return String(data);
-		if (typeof data === 'string') return data;
-		if (typeof data === 'object') {
-			const isArray = Array.isArray(data);
-			if (isArray && data.every(datum => typeof datum === 'string')) return data.join('\n');
-			return data.stack || data.message || inspect(data, { depth: Number(isArray), colors: Colors.useColors })
-		}
-		return String(data);
-	}
+    public log(...data: any[]): void {
+        this.write(data, 'log');
+    }
+
+    public warn(...data: any[]): void {
+        this.write(data, 'warn');
+    }
+
+    public error(...data: any[]): void {
+        this.write(data, 'error');
+    }
+
+    public debug(...data: any[]): void {
+        this.write(data, 'debug');
+    }
+
+    public verbose(...data: any[]): void {
+        this.write(data, 'verbose');
+    }
+
+    public wtf(...data: any[]): void {
+        this.write(data, 'wtf');
+    }
+
+    private static _flatten(data: any): string {
+        if (typeof data === 'undefined' || typeof data === 'number' || data === null) return String(data);
+        if (typeof data === 'string') return data;
+        if (typeof data === 'object') {
+            const isArray = Array.isArray(data);
+            if (isArray && data.every(datum => typeof datum === 'string')) return data.join('\n');
+            return data.stack || data.message || inspect(data, { depth: Number(isArray), colors: Colors.useColors });
+        }
+        return String(data);
+    }
 }

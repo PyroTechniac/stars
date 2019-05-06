@@ -9,7 +9,6 @@ export * from './ToolkitOptions';
 export * from './TemplateData';
 export * from './LocalizedCommandInfo';
 export * from './ResourceLoader';
-export * from './ResourceProxy';
 export * from './ArgOpts';
 export * from './ColorsFormatData';
 export * from './ColorsFormatOptions';

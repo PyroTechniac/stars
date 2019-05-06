@@ -6,13 +6,12 @@ import { console, Console } from '../util/console/Console';
 import { ListenerUtil } from '../util/ListenerUtil';
 import { ToolkitOptions } from '../types';
 import { ClientUtil } from './ClientUtil';
+import { ToolkitConsole } from '../util/ToolkitConsole';
 
 const { once, on, registerListeners } = ListenerUtil;
 
 export class ToolkitClient extends Discord.Client {
-    @console('Client')
-    private readonly _console!: Console;
-
+    public console: ToolkitConsole = new ToolkitConsole();
     private readonly _token: string;
     private _ratelimit!: string;
 

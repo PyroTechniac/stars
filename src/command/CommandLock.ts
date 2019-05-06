@@ -1,6 +1,4 @@
 import { Message } from 'discord.js';
-import { Lang } from '../localization/Lang';
-import { BaseStrings as s } from '../localization/BaseStrings';
 
 export class CommandLock {
     private _locks: { [guild: string]: boolean } = {}

@@ -5,7 +5,7 @@ const colorBase = {
     shard: { background: 'cyan', text: 'black' },
     message: {},
     time: {}
-}
+};
 
 export const DEFAULTS = {
     CONSOLE: {
