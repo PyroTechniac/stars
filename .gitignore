@@ -1,2 +1,6 @@
 node_modules
 lib
+
+/scripts/**/*.js
+/scripts/**/*.d.ts
+/scripts/storage

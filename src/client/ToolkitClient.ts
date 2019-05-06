@@ -5,6 +5,7 @@ import * as path from 'path';
 import { console, Console } from '../util/console/Console';
 import { ListenerUtil } from '../util/ListenerUtil';
 import { ToolkitOptions } from '../types';
+import { ClientUtil } from './ClientUtil';
 
 const { once, on, registerListeners } = ListenerUtil;
 
@@ -17,6 +18,7 @@ export class ToolkitClient extends Discord.Client {
 
     public readonly compact: boolean;
     public readonly tsNode: boolean
+    public readonly util: ClientUtil = new ClientUtil(this);
 
     public constructor(options: ToolkitOptions, clientOptions?: Discord.ClientOptions) {
         super(clientOptions);

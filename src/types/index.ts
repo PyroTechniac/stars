@@ -7,3 +7,7 @@ export * from './Message';
 export * from './Difference';
 export * from './ToolkitOptions';
 export * from './TemplateData';
+export * from './LocalizedCommandInfo';
+export * from './ResourceLoader';
+export * from './ResourceProxy';
+export * from './ArgOpts';

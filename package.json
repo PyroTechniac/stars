@@ -6,9 +6,10 @@
         "prebuild": "npm run lint:fix",
         "lint:fix": "npx eslint src --ext .ts --fix",
         "lint": "npx eslint src --ext .ts",
-        "build": "tsc"
+        "build": "gulp build"
     },
     "dependencies": {
+        "del": "^4.1.1",
         "discord.js": "discordjs/discord.js",
         "glob": "7.1.2",
         "node-json-db": "0.7.3",
@@ -23,6 +24,9 @@
         "@typescript-eslint/parser": "^1.7.0",
         "eslint": "^5.16.0",
         "eslint-config-marine": "^2.2.0",
+        "gulp": "^4.0.1",
+        "gulp-sourcemaps": "^2.6.5",
+        "gulp-typescript": "^5.0.1",
         "typescript": "^3.4.5"
     },
     "optionalDependencies": {},

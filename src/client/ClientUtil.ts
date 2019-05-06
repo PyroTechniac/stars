@@ -5,6 +5,40 @@ import { ToolkitClient as Client } from './ToolkitClient';
 export class ClientUtil {
     public constructor(public client: Client) { }
 
+    public resolveUser(text: string, users: Discord.Collection<Discord.Snowflake, Discord.User>, caseSensitive = false, wholeWord = false): Discord.User {
+        return users.get(text) || users.find(user => this.checkUser(text, user, caseSensitive, wholeWord));
+    }
+
+    public resolveUsers(text: string, users: Discord.Collection<Discord.Snowflake, Discord.User>, caseSensitive = false, wholeWord = false): Discord.Collection<Discord.Snowflake, Discord.User> {
+        return users.filter(user => this.checkUser(text, user, caseSensitive, wholeWord));
+    }
+
+    public checkUser(text: string, user: Discord.User, caseSensitive = false, wholeWord = false): boolean {
+        if (user.id === text) return true;
+
+        const reg: RegExp = /<@!?(\d{17,19})>/;
+        const match = text.match(reg);
+
+        if (match && user.id === match[1]) return true;
+
+        text = caseSensitive ? text : text.toLowerCase();
+        const username = caseSensitive ? user.username : user.username.toLowerCase();
+        const discrim = user.discriminator;
+
+        if (!wholeWord) {
+            return username.includes(text) || (username.includes(text.split('#')[0]) && discrim.includes(text.split('#')[1]));
+        }
+        return username === text || (username === text.split('#')[0] && discrim === text.split('#')[1]);
+    }
+
+    public resolveMember(text: string, members: Discord.Collection<Discord.Snowflake, Discord.GuildMember>, caseSensitive = false, wholeWord = false): Discord.GuildMember {
+        return members.get(text) || members.find(member => this.checkMember(text, member, caseSensitive, wholeWord));
+    }
+
+    public resolveMembers(text: string, members: Discord.Collection<Discord.Snowflake, Discord.GuildMember>, caseSensitive = false, wholeWord = false): Discord.Collection<Discord.Snowflake, Discord.GuildMember> {
+        return members.filter(member => this.checkMember(text, member, caseSensitive, wholeWord));
+    }
+
     public checkMember(text: string, member: Discord.GuildMember, caseSensitive = false, wholeWord = false): boolean {
         if (member.id === text) return true;
 
