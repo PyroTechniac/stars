@@ -14,3 +14,4 @@ export * from './ArgOpts';
 export * from './ColorsFormatData';
 export * from './ColorsFormatOptions';
 export * from './AnyObj';
+export * from './Console';
