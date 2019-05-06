@@ -1,5 +1,5 @@
 {
-    "name": "@starslight/stars",
+    "name": "@starslight/toolkit",
     "version": "0.1.0",
     "author": "Gryffon Bellish <owenbellish@gmail.com>",
     "scripts": {
@@ -8,8 +8,17 @@
         "lint": "npx eslint src --ext .ts",
         "build": "tsc"
     },
-    "dependencies": {},
+    "dependencies": {
+        "discord.js": "discordjs/discord.js",
+        "glob": "7.1.2",
+        "node-json-db": "0.7.3",
+        "reflect-metadata": "^0.1.13",
+        "source-map-support": "^0.5.12"
+    },
     "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/node": "^12.0.0",
+        "@types/node-json-db": "^0.0.1",
         "@typescript-eslint/eslint-plugin": "^1.7.0",
         "@typescript-eslint/parser": "^1.7.0",
         "eslint": "^5.16.0",
@@ -50,7 +59,10 @@
             "@typescript-eslint/unified-signatures": "off",
             "promise/catch-or-return": "off",
             "promise/prefer-await-to-then": "off",
-            "no-mixed-operators": "off"
+            "no-mixed-operators": "off",
+            "max-statements-per-line": "off",
+            "@typescript-eslint/explicit-function-return-type": "off",
+            "guard-for-in": "off"
         }
     },
     "eslintIgnore": [

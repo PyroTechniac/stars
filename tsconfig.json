@@ -1,13 +1,21 @@
 {
     "compilerOptions": {
+        "experimentalDecorators": true,
         "outDir": "./lib",
         "target": "esnext",
         "module": "commonjs",
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "types": [],
+        "types": [
+            "node",
+            "discord.js",
+            "node-json-db",
+            "chalk",
+            "glob"
+        ],
         "noEmitOnError": true,
-        "declaration": true
+        "declaration": true,
+        "emitDecoratorMetadata": true
     },
     "exclude": [
         "node_modules",
