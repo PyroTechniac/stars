@@ -11,3 +11,6 @@ export * from './LocalizedCommandInfo';
 export * from './ResourceLoader';
 export * from './ResourceProxy';
 export * from './ArgOpts';
+export * from './ColorsFormatData';
+export * from './ColorsFormatOptions';
+export * from './AnyObj';
